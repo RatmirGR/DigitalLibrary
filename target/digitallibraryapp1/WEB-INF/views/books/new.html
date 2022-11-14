@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница добавления человека</title>
+    <style>
+        body {
+            background-color: #fde9d3;
+            position: center;
+        }
+        table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid purple;
+        }
+        th, td {
+            padding: 5px;
+        }
+        thead{
+            background-color: #ffbe7a;
+        }
+        form{
+            width: 350px;
+            padding: 5px;
+            border: 1px solid purple;
+            margin-bottom: 10px;
+        }
+        .name_book{
+            margin-right: 10px;
+        }
+        .author_book{
+            margin-right: 67px;
+        }
+        .year{
+            margin-right: 30px;
+        }
+        .submit{
+            margin: 10px 37% 0 37%;
+            position: center;
+        }
+    </style>
+</head>
+<body>
+<div align="center">
+    <form th:method="POST" th:action="@{/books}" th:object="${book}">
+        <label class="name_book" for="name">Введите название книги:</label>
+        <input type="text" th:field="*{name}" id="name"/>
+        <!--        <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>-->
+        </br>
+
+        <label class="author_book" for="author">Введите автора:</label>
+        <input type="text" th:field="*{author}" id="author"/>
+        <!--        <div style="color:red" th:if="${#fields.hasErrors('year_of_birth')}" th:errors="*{year_of_birth}">Year of Birth Error</div>-->
+        </br>
+
+        <label class="year" for="year_of_created">Введите год выпуска:</label>
+        <input type="text" th:field="*{year_of_created}" id="year_of_created"/>
+        <!--        <div style="color:red" th:if="${#fields.hasErrors('year_of_birth')}" th:errors="*{year_of_birth}">Year of Birth Error</div>-->
+        </br>
+
+        <input class="submit" type="submit" value="Создать!"/>
+    </form>
+    <a href="/books/">Отмена</a>
+</div>
+</body>
+</html>

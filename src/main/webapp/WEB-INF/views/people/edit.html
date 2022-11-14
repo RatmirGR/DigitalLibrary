@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница изменения человека</title>
+    <style>
+        body {
+            background-color: #fde9d3;
+            position: center;
+        }
+        table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid purple;
+        }
+        th, td {
+            padding: 5px;
+        }
+        thead{
+            background-color: #ffbe7a;
+        }
+        form{
+            width: 330px;
+            padding: 5px;
+            border: 1px solid purple;
+            margin-bottom: 10px;
+        }
+        .fio{
+            margin-right: 70px;
+        }
+        .year{
+            margin-right: 14px;
+        }
+        .submit{
+            margin: 10px 37% 0 37%;
+            position: center;
+        }
+    </style>
+</head>
+<body>
+
+<div align="center">
+    <form th:method="PATCH" th:action="@{/people/{id}(id=${person.getId()})}" th:object="${person}">
+
+        <label class="fio" for="name">Введите ФИО:</label>
+        <input type="text" th:field="*{name}" id="name"/>
+        <!--        <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>-->
+        </br>
+
+        <label class="year" for="year_of_birth">Введите год рождения:</label>
+        <input type="text" th:field="*{yearOfBirth}" id="year_of_birth"/>
+        <!--        <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{year_of_birth}">Year of Birth Error</div>-->
+        </br>
+      <input class="submit" type="submit" value="Редактировать!"/>
+    </form>
+    <a href="/people/">Отмена</a>
+</div>
+</body>
+</html>
