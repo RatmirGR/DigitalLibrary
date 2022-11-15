@@ -21,7 +21,7 @@ public class PeopleController {
     @Autowired
     public PeopleController(PersonDAO personDAO) {
         this.personDAO = personDAO;
-  //      this.personValidator = personValidator;
+        // this.personValidator = personValidator;
     }
 
     /*-------------------- страница со списком пользователей ------------------------*/
@@ -30,6 +30,7 @@ public class PeopleController {
     public String index(Model model){
         // получение всех людей из DAO и передача их на отображение в представление
         model.addAttribute("people", personDAO.index());
+        model.addAttribute("books", personDAO.merge(3));
         return "people/index";
     }
 
@@ -39,7 +40,7 @@ public class PeopleController {
     public String show(@PathVariable("id") int id, Model model){
         // получение одного человека из DAO и передача их на отображение в представление
         model.addAttribute("person", personDAO.show(id));
-        //model.addAttribute("resuls", personDAO.merge(id));
+        model.addAttribute("books", personDAO.merge(id));
         return "people/show";
     }
 

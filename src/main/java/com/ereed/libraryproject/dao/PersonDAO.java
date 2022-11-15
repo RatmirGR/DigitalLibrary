@@ -1,5 +1,6 @@
 package com.ereed.libraryproject.dao;
 
+import com.ereed.libraryproject.models.Book;
 import com.ereed.libraryproject.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -41,10 +42,10 @@ public class PersonDAO {
         jdbcTemplate.update("delete from Person where id=?", id);
     }
 
-    public Person merge(int id){
-        return jdbcTemplate.query("select Person.id, Person.name from Person JOIN Book ON Person.id = Book.person_id where Book.id=?",
+    public List<Book> merge(int id){
+        return jdbcTemplate.query("select Book.name, Book.author, Book.year_of_created from Person JOIN Book ON Person.id = Book.person_id where Person.id=?",
                 new Object[]{id},
-                new BeanPropertyRowMapper<>(Person.class)).stream().findAny().orElse(null);
+                new BeanPropertyRowMapper<>(Book.class)
+        );
     }
-
 }

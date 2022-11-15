@@ -13,6 +13,7 @@
             width: 100%;
             border-collapse: collapse;
             border: 1px solid purple;
+            text-align: center;
         }
         th, td {
             padding: 5px;
@@ -20,18 +21,16 @@
         thead{
             background-color: #ffbe7a;
         }
-        .head_left_row{
-            width: 75%;
-            text-align: left;
-            padding-left: 3%;
-        }
         .left_row{
+            width: 50%;
             text-align: left;
             padding-left: 3%;
         }
-        .head_right_row, .right_row{
-            width: 25%;
-            text-align: center;
+        .head_right_row{
+            width: 15%;
+        }
+        .head_status_row{
+            width: 10%;
         }
     </style>
 </head>
@@ -42,12 +41,14 @@
             <tr>
                 <td class="head_left_row">ФИО</td>
                 <td class="head_right_row">Год рождения</td>
+                <td class="head_status_row">Статус</td>
             </tr>
         </thead>
         <tbody>
             <tr th:each="person : ${people}">
                 <td class="left_row"><a th:href="@{/people/{id}(id=${person.getId()})}" th:text="${person.getName()}">User</a></td>
                 <td class="right_row" th:text="${person.getYearOfBirth()}">User</td>
+                <td class="status_row"><input th:checked="${person.getCount_books() > 0}" type="checkbox" disabled /></td>
             </tr>
         </tbody>
     </table>

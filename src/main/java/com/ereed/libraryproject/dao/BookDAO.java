@@ -42,17 +42,21 @@ public class BookDAO {
         jdbcTemplate.update("delete from Book where id=?", id);
     }
 
-    public void assignBook(Person person, int id){
-        jdbcTemplate.update("update Book set person_id=?, check_status=? where id=?", person.getId(), true, id);
-    }
-
     public Person merge(int id){
-        return jdbcTemplate.query("select Person.id, Person.name from Person JOIN Book ON Person.id = Book.person_id where Book.id=?",
+        return jdbcTemplate.query("select Person.id, Person.name, Person.count_books from Person JOIN Book ON Person.id = Book.person_id where Book.id=?",
                 new Object[]{id},
                 new BeanPropertyRowMapper<>(Person.class)).stream().findAny().orElse(null);
     }
 
+    public void assignPerson(Person person, int id){
+        jdbcTemplate.update("update Book set person_id=?, check_status=? where id=?", person.getId(), true, id);
+        jdbcTemplate.update("update Person set count_books = count_books+1 where id=?", person.getId());
+    }
+
     public void deletePerson(int id){
+        jdbcTemplate.update("update Person set count_books = count_books-1\n" +
+                "from (select Person.id as person_id from Person join Book ON Person.id = Book.person_id where Book.id=?)\n" +
+                "as Subquery where Person.id = Subquery.person_id", id);
         jdbcTemplate.update("update Book set person_id=?, check_status=? where id=?", null, false, id);
     }
 }
