@@ -40,6 +40,9 @@ public class BookDAO {
     }
 
     public void delete(int id){
+        jdbcTemplate.update("update Person set count_books = count_books-1\n" +
+                "from (select Person.id as person_id from Person join Book ON Person.id = Book.person_id where Book.id=?)\n" +
+                "as Subquery where Person.id = Subquery.person_id", id);
         jdbcTemplate.update("delete from Book where id=?", id);
     }
 

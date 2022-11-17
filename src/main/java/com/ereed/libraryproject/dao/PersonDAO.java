@@ -40,6 +40,7 @@ public class PersonDAO {
     }
 
     public void delete(int id){
+        jdbcTemplate.update("update Book set check_status=? where Book.person_id=?", false, id);
         jdbcTemplate.update("delete from Person where id=?", id);
     }
 
