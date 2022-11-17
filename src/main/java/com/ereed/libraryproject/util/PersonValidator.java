@@ -7,28 +7,27 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-//@Component
-public class PersonValidator /*implements Validator*/ {
+@Component
+public class PersonValidator implements Validator {
 
-//    private final PersonDAO personDAO;
-//
-//    @Autowired
-//    public PersonValidator(PersonDAO personDAO) {
-//        this.personDAO = personDAO;
-//    }
-//
-//    @Override
-//    public boolean supports(Class<?> aClass) {
-//        return Person.class.equals(aClass);
-//    }
-//
-//    @Override
-//    public void validate(Object o, Errors errors) {
-//        Person person = (Person) o;
+    private final PersonDAO personDAO;
 
-        // проверить, есть ли человек с таким же email'ом в БД
-//        if (personDAO.show(person.getEmail()).isPresent()){
-//            errors.rejectValue("email", "", "This email is already taken");
-//        }
-//    }
+    @Autowired
+    public PersonValidator(PersonDAO personDAO) {
+        this.personDAO = personDAO;
+    }
+
+    @Override
+    public boolean supports(Class<?> aClass) {
+        return Person.class.equals(aClass);
+    }
+
+    @Override
+    public void validate(Object o, Errors errors) {
+        Person person = (Person) o;
+
+        if (personDAO.getPersonByName(person.getName()).isPresent()){
+            errors.rejectValue("name", "", "Человек с таким ФИО уже существует");
+        }
+    }
 }

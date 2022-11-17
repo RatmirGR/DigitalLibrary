@@ -2,6 +2,7 @@ package com.ereed.libraryproject.models;
 
 import lombok.Data;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -9,13 +10,16 @@ import javax.validation.constraints.Size;
 public class Book {
     private int id;
 
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 200, message = "Name should be between 2 and 200 characters")
-    private String name;
+    @NotEmpty(message = "Название книги не должно быть пустым")
+    @Size(min = 2, max = 250, message = "Название книги должно быть длиной от 2 до 250 символов")
+    private String title;
 
-    //    @Pattern(regexp = "",
-//            message = "Your ...")
+    @NotEmpty(message = "Имя автора книги не должно быть пустым")
+    @Size(min = 2, max = 250, message = "Имя автора книги должно быть длиной от 2 до 250 символов")
     private String author;
+
+    @Min(value = 1700, message = "Год рождения должен быть больше, чем 1700")
     private int year_of_created;
+
     private boolean check_status;
 }

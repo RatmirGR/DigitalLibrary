@@ -27,7 +27,7 @@
 <table border="0" cellpadding="2" cellspacing="5">
     <tr>
         <td>Название книги:</td>
-        <td th:text="${book.getName()}">Value</td>
+        <td th:text="${book.getTitle()}">Value</td>
     </tr>
     <tr>
         <td>Автор книги:</td>
@@ -40,20 +40,20 @@
     <tr>
         <td>Статус книги:</td>
         <td>
-            <div th:if="${result}">
-                Книга сейчас у: <span th:text="${result.getName()}">Value</span>
-                <form th:method="PATCH" th:action="@{/books/{id}/delete(id=${book.getId()})}">
+            <div th:if="${owner}">
+                Книга сейчас у: <span th:text="${owner.getName()}">Value</span>
+                <form th:method="PATCH" th:action="@{/books/{id}/release(id=${book.getId()})}">
                     <input type="submit" value="Освободить книгу"/>
                 </form>
             </div>
-            <div th:unless="${result}">
-            Эта книга свободна. Кому назначить ее?
-            <form th:method="PATCH" th:action="@{/books/{id}/add(id=${book.getId()})}" th:object="${person}">
-                <select th:field="*{id}">
-                    <option th:each="person : ${people}" th:value="${person.getId()}" th:text="${person.getName()}"></option>
-                </select>
-                <input type="submit" value="Назначить книгу"/>
-            </form>
+            <div th:if="${people}">
+                <span>Эта книга свободна. Кому назначить ее?</span>
+                <form th:method="PATCH" th:action="@{/books/{id}/assign(id=${book.getId()})}">
+                    <select th:object="${person}" th:field="*{id}">
+                        <option th:each="person : ${people}" th:value="${person.getId()}" th:text="${person.getName()}"></option>
+                    </select>
+                    <input type="submit" value="Назначить книгу"/>
+                </form>
             </div>
         </td>
     </tr>

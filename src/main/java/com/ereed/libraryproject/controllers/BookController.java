@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
@@ -18,12 +19,10 @@ public class BookController {
 
     private final BookDAO bookDAO;
     private final PersonDAO personDAO;
-    //   private final BookValidator bookValidator;
 
     @Autowired
     public BookController(BookDAO bookDAO, PersonDAO personDAO) {
         this.bookDAO = bookDAO;
-        //      this.bookValidator = bookValidator;
         this.personDAO = personDAO;
     }
 
@@ -41,9 +40,14 @@ public class BookController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person){
         // получение одной книги из DAO и передача их на отображение в представление
-        model.addAttribute("result", bookDAO.merge(id));
         model.addAttribute("book", bookDAO.show(id));
-        model.addAttribute("people", personDAO.index());
+
+        Optional<Person> bookOwner = bookDAO.getBookOwner(id);
+
+        if (bookOwner.isPresent())
+            model.addAttribute("owner", bookOwner.get());
+        else
+            model.addAttribute("people", personDAO.index());
         return "books/show";
     }
 
@@ -59,9 +63,6 @@ public class BookController {
     @PostMapping()
     public String create(@ModelAttribute("book") @Valid Book book,
                          BindingResult bindingResult) {
-
-
-        //  bookValidator.validate(book, bindingResult);
 
         if (bindingResult.hasErrors())
             return "books/new";
@@ -83,8 +84,6 @@ public class BookController {
     public String update(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult,
                          @PathVariable("id") int id) {
 
-        //      bookValidator.validate(book, bindingResult);
-
         if (bindingResult.hasErrors())
             return "books/edit";
 
@@ -102,17 +101,17 @@ public class BookController {
 
     /*----------------------- назначение пользователя книги -----------------------*/
 
-    @PatchMapping("/{id}/add")
+    @PatchMapping("/{id}/assign")
     public String assignBook(@ModelAttribute("person") Person person, @PathVariable("id") int id){
-        bookDAO.assignPerson(person, id);
-        return "redirect:/books";
+        bookDAO.assign(person, id);
+        return "redirect:/books/" + id;
     }
 
     /*----------------------- освобождение пользователя книги -----------------------*/
 
-    @PatchMapping("/{id}/delete")
+    @PatchMapping("/{id}/release")
     public String deletePerson(@PathVariable("id") int id){
-        bookDAO.deletePerson(id);
-        return "redirect:/books";
+        bookDAO.release(id);
+        return "redirect:/books/" + id;
     }
 }

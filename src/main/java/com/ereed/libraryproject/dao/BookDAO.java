@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BookDAO {
@@ -29,31 +30,30 @@ public class BookDAO {
     }
 
     public void save(Book book){
-        jdbcTemplate.update("insert into Book(name, author, year_of_created, check_status) values (?, ?, ?, ?)",
-                book.getName(), book.getAuthor(), book.getYear_of_created(), book.isCheck_status());
+        jdbcTemplate.update("insert into Book(title, author, year_of_created, check_status) values (?, ?, ?, ?)",
+                book.getTitle(), book.getAuthor(), book.getYear_of_created(), book.isCheck_status());
     }
 
     public void update(int id, Book book){
-        jdbcTemplate.update("update Book set name=?, author=?, year_of_created=?, check_status=? where id=?",
-                book.getName(), book.getAuthor(), book.getYear_of_created(), book.isCheck_status(), id);
+        jdbcTemplate.update("update Book set title=?, author=?, year_of_created=?, check_status=? where id=?",
+                book.getTitle(), book.getAuthor(), book.getYear_of_created(), book.isCheck_status(), id);
     }
 
     public void delete(int id){
         jdbcTemplate.update("delete from Book where id=?", id);
     }
 
-    public Person merge(int id){
-        return jdbcTemplate.query("select Person.id, Person.name, Person.count_books from Person JOIN Book ON Person.id = Book.person_id where Book.id=?",
-                new Object[]{id},
-                new BeanPropertyRowMapper<>(Person.class)).stream().findAny().orElse(null);
+    public Optional<Person> getBookOwner(int id){
+        return jdbcTemplate.query("select Person.* from Book join Person on Book.person_id = Person.id where Book.id=?",
+                new Object[]{id}, new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
     }
 
-    public void assignPerson(Person person, int id){
+    public void assign(Person person, int id){
         jdbcTemplate.update("update Book set person_id=?, check_status=? where id=?", person.getId(), true, id);
         jdbcTemplate.update("update Person set count_books = count_books+1 where id=?", person.getId());
     }
 
-    public void deletePerson(int id){
+    public void release(int id){
         jdbcTemplate.update("update Person set count_books = count_books-1\n" +
                 "from (select Person.id as person_id from Person join Book ON Person.id = Book.person_id where Book.id=?)\n" +
                 "as Subquery where Person.id = Subquery.person_id", id);

@@ -50,7 +50,7 @@
         </thead>
         <tbody>
         <tr th:each="book : ${books}">
-            <td class="left_row"><a th:href="@{/books/{id}(id=${book.getId()})}" th:text="${book.getName()}">Id</a></td>
+            <td class="left_row"><a th:href="@{/books/{id}(id=${book.getId()})}" th:text="${book.getTitle()}">Id</a></td>
             <td class="center_row" th:text="${book.getAuthor()}">Author</td>
             <td class="right_row" th:text="${book.getYear_of_created()}">Year</td>
             <td class="status_row"><input th:checked="*{book.isCheck_status()}" type="checkbox" disabled /></td>

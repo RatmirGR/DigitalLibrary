@@ -50,7 +50,7 @@
         <td class="right_row">
             <div th:if="${!books.isEmpty()}">
                 <p th:each="book : ${books}">
-                    <span th:text="${book.getName()}">Name</span>,
+                    <span th:text="${book.getTitle()}">Name</span>,
                     <span th:text="${book.getAuthor()}">Author</span>,
                     <span th:text="${book.getYear_of_created()}">Year</span>
                 </p>
